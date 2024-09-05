@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        #controls { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 5px; margin-top: 5px; }
+        button { margin-top: 10px; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        #canvas-container { border: 1px solid #ccc;  height: fit-content; width: fit-content;}
+        #error-message { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label for="promotion">Promotion:</label>
+        <input type="text" id="promotion" placeholder="e.g., Summer Sale">
+
+        <label for="theme">Theme:</label>
+        <input type="text" id="theme" placeholder="e.g., Beach">
+
+        <label for="resolution">Resolution:</label>
+        <select id="resolution">
+            <option value="1200x600">1200x600</option>
+            <option value="1024x512">1024x512</option>
+            <option value="800x400">1920x600</option>
+        </select>
+
+        <label for="color-palette">Color Palette (comma-separated hex codes):</label>
+        <input type="text" id="color-palette" placeholder="e.g., #FF5733,#33FF57,#3357FF">
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" accept="image/*">
+
+        <button onclick="generateBanner()">Generate Banner</button>
+    </div>
+
+    <div id="error-message"></div>
+
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        let canvas = new fabric.Canvas('canvas');
+
+        async function generateBanner() {
+            const promotion = document.getElementById('promotion').value;
+            const theme = document.getElementById('theme').value;
+            const resolution = document.getElementById('resolution').value;
+            const colorPalette = document.getElementById('color-palette').value.split(',');
+            const imageFile = document.getElementById('image').files[0];
+            const errorMessageElement = document.getElementById('error-message');
+
+            errorMessageElement.textContent = ''; // Clear any previous error messages
+
+            if (!imageFile) {
+                errorMessageElement.textContent = 'Please upload an image.';
+                return;
+            }
+
+            try {
+                const imageData = await readFileAsDataURL(imageFile);
+
+                const requestData = {
+                    promotion: promotion,
+                    theme: theme,
+                    resolution: resolution,
+                    color_palette: colorPalette,
+                    image: imageData.split(',')[1] // Remove the "data:image/jpeg;base64," part
+                };
+
+                const response = await fetch('/generate_banner', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const bannerData = await response.json();
+                renderBanner(bannerData);
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageElement.textContent = `An error occurred: ${error.message}`;
+            }
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+        function renderBanner(bannerData) {
+            canvas.clear();
+            canvas.setWidth(bannerData.width);
+            canvas.setHeight(bannerData.height);
+
+            bannerData.objects.forEach(obj => {
+                if (obj.type === 'image') {
+                    fabric.Image.fromURL(obj.src, (img) => {
+                        img.set({
+                            left: obj.left,
+                            top: obj.top,
+                            scaleX: obj.width / img.width,
+                            scaleY: obj.height / img.height
+                        });
+                        canvas.add(img);
+                    });
+                } else if (obj.type === 'text') {
+                    try {
+                        const text = new fabric.Text(obj.text || 'Default Text', {
+                            left: obj.left,
+                            top: obj.top,
+                            fontSize: obj.fontSize || 20,
+                            fill: obj.fill || '#000000',
+                            fontWeight: obj.fontWeight || 'normal',
+                            fontStyle: obj.fontStyle || 'normal',
+                            fontFamily: obj.fontFamily || 'Arial',
+                            textAlign: obj.textAlign || 'left'
+                        });
+                        canvas.add(text);
+                    } catch (error) {
+                        console.error('Error rendering text:', error);
+                        document.getElementById('error-message').textContent = 'Error rendering text. Please try again.';
+                    }
+                }
+            });
+            canvas.renderAll();
+        }
+    </script>
+</body>
+</html>
