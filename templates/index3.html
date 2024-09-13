@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Banner Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script> 
     <style>
         :root {
             --bg-color: #1a1a2e;
@@ -66,11 +66,6 @@
             margin-top: 20px;
             position: relative;
         }
-        /* scale down canvas using transform property so it doesn't go out of the screen for bigger widths */
-        /* canvas {
-            transform: scale(0.9);
-            transform-origin: center;
-        } */
 
         #loading-overlay {
             position: absolute;
@@ -78,8 +73,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            height: 100%; /* Full height (optional)*/
-            width: 100%; /* Full width (optional)*/
+            height: 100%; 
+            width: 100%; 
             background: rgba(26, 26, 46, 0.8);
             display: flex;
             justify-content: center;
@@ -88,7 +83,7 @@
             color: var(--accent-light);
             animation: gradient 3s linear infinite;
         }
-        /* background color gradient animation for loading overlay */
+        
         @keyframes gradient {
             0% {
                 background-position: 0% 50%;
@@ -150,11 +145,11 @@
         #banner-image {
             max-width: 100%; 
             height: auto;
-            display: block; /* Prevents extra space below the image */
+            display: block; 
         }
 
         #canvas-container {
-            display: none; /* Hide the canvas initially */
+            display: none; 
         }
 
         #image-preview-container {
@@ -171,7 +166,7 @@
             display: inline-block;
         }
 
-        /* Add styles for download button */
+        
         #download-button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -235,21 +230,12 @@
 
         <div id="error-message"></div>
 
-        <!-- <div id="canvas-container">
-            <canvas id="canvas"></canvas>
-            <div id="loading-overlay" style="display:none;">
-                Generating banner...
-            </div>
-        </div> -->
         <div id="canvas-container">
-            <canvas id="canvas"></canvas>
+            <div id="konva-container"></div> 
         </div>
 
         <div id="image-preview-container">
             <img id="banner-preview" alt="Banner Preview">
-            <!-- <div id="loading-overlay" style="display:none;">
-                Generating banner...
-            </div> -->
         </div>
 
         <button id="download-button" style="display: none;">Download Banner</button>
@@ -260,7 +246,7 @@
     </div>
 
     <script>
-        let canvas = new fabric.Canvas('canvas');
+        
         const resolutionSelect = document.getElementById('resolution');
         const customResolution = document.getElementById('custom-resolution');
 
@@ -366,120 +352,123 @@
    
 
     function renderBanner(bannerData) {
-            const canvasContainer = document.getElementById('canvas-container');
-            const imagePreviewContainer = document.getElementById('image-preview-container');
-            const loadingOverlay = document.getElementById('loading-overlay');
-            const bannerPreview = document.getElementById('banner-preview');
-            const downloadButton = document.getElementById('download-button');
-            
-            loadingOverlay.style.display = 'flex';
-            imagePreviewContainer.style.display = 'none';
-            downloadButton.style.display = 'none';
+        const canvasContainer = document.getElementById('canvas-container');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const bannerPreview = document.getElementById('banner-preview');
+        const downloadButton = document.getElementById('download-button');
+        const konvaContainer = document.getElementById('konva-container');
 
-            canvas.clear();
-            canvas.setWidth(bannerData.width);
-            canvas.setHeight(bannerData.height);
+        loadingOverlay.style.display = 'flex';
+        imagePreviewContainer.style.display = 'none';
+        downloadButton.style.display = 'none';
 
-            // Render background image first (if it exists)
-            const backgroundImage = bannerData.objects.find(obj => obj.type === 'image' && obj.left === '0%' && obj.top === '0%');
-            if (backgroundImage) {
-                fabric.Image.fromURL(backgroundImage.src, (img) => {
-                    img.set({
-                        left: parseFloat(backgroundImage.left) * canvas.width / 100,
-                        top: parseFloat(backgroundImage.top) * canvas.height / 100,
-                        scaleX: parseFloat(backgroundImage.width) / 100,
-                        scaleY: parseFloat(backgroundImage.height) / 100
-                    });
-                    img.set('selectable', false);
-                    canvas.add(img);
-                    canvas.sendToBack(img);
+        // Create Konva stage and layer
+        const stage = new Konva.Stage({
+            container: konvaContainer,
+            width: bannerData.width,
+            height: bannerData.height
+        });
+
+        const layer = new Konva.Layer();
+        stage.add(layer);
+
+        // Render background image first (if it exists)
+        const backgroundImage = bannerData.objects.find(obj => obj.type === 'image' && obj.left === '0%' && obj.top === '0%');
+        if (backgroundImage) {
+            Konva.Image.fromURL(backgroundImage.src, (img) => {
+                img.setAttrs({
+                    x: parseFloat(backgroundImage.left) * bannerData.width / 100,
+                    y: parseFloat(backgroundImage.top) * bannerData.height / 100,
+                    width: parseFloat(backgroundImage.width) * bannerData.width / 100,
+                    height: parseFloat(backgroundImage.height) * bannerData.height / 100
                 });
-            }
-
-            // Render other objects
-            bannerData.objects.forEach(obj => {
-                if (obj !== backgroundImage) {
-                    if (obj.type === 'image') {
-                        fabric.Image.fromURL(obj.src, (img) => {
-                            img.set({
-                                left: parseFloat(obj.left) * canvas.width / 100,
-                                top: parseFloat(obj.top) * canvas.height / 100,
-                                scaleX: parseFloat(obj.width) / 100,
-                                scaleY: parseFloat(obj.height) / 100
-                            });
-                            img.set('selectable', false);
-                            canvas.add(img);
-                        });
-                    } else if (obj.type === 'text') {
-                        const text = new fabric.Text(obj.text || 'Default Text', {
-                            left: parseFloat(obj.left) * canvas.width / 100,
-                            top: parseFloat(obj.top) * canvas.height / 100,
-                            fontSize: obj.fontSize,
-                            fill: obj.fill,
-                            fontWeight: obj.fontWeight,
-                            fontStyle: obj.fontStyle,
-                            fontFamily: obj.fontFamily,
-                            textAlign: obj.textAlign
-                        });
-                        text.set('selectable', false);
-                        canvas.add(text);
-                    }
-                }
+                layer.add(img);
+                layer.draw(); 
             });
-
-            // Ensure all objects are rendered before converting to image
-            canvas.renderAll();
-
-            // Add a delay to ensure images are fully loaded
-            setTimeout(() => {
-                // Convert canvas to image
-                const imageDataUrl = canvas.toDataURL({ format: 'png' });
-
-                // Set the preview image source
-                bannerPreview.src = imageDataUrl;
-                
-                // Remove any previous inline styles
-                bannerPreview.style.width = '';
-                bannerPreview.style.height = '';
-
-                // Hide loading overlay and show image preview
-                loadingOverlay.style.display = 'none';
-                imagePreviewContainer.style.display = 'block';
-                downloadButton.style.display = 'inline-block';
-
-                // Set up download functionality
-                downloadButton.onclick = () => {
-                    const link = document.createElement('a');
-                    link.download = 'generated_banner.png';
-                    link.href = imageDataUrl;
-                    link.click();
-                };
-                // Show the Advanced Edit button
-                document.getElementById('advanced-edit-button').style.display = 'inline-block';
-            }, 1000); // Adjust the delay as needed
         }
 
-        function openAdvancedEditor() {
-            // Convert canvas to JSON
-            const canvasJSON = JSON.stringify(canvas.toJSON());
-            // add width and height to the canvasJSON
-            const canvasResolution = getResolution();
-            // Store the canvas data in localStorage
-            localStorage.setItem('canvasData', canvasJSON);
-            localStorage.setItem('canvasResolution', canvasResolution);
-            // Open the advanced editor in a new window
-            window.open('/advanced-editor', '_blank');
-        }
-
-        // Add event listener for window resize
-        window.addEventListener('resize', () => {
-            const bannerPreview = document.getElementById('banner-preview');
-            if (bannerPreview.src) {
-                // Reset inline styles to allow CSS to handle responsiveness
-                bannerPreview.style.width = '';
-                bannerPreview.style.height = '';
+        // Render other objects
+        bannerData.objects.forEach(obj => {
+            if (obj !== backgroundImage) {
+                if (obj.type === 'image') {
+                    Konva.Image.fromURL(obj.src, (img) => {
+                        img.setAttrs({
+                            x: parseFloat(obj.left) * bannerData.width / 100,
+                            y: parseFloat(obj.top) * bannerData.height / 100,
+                            width: parseFloat(obj.width) * bannerData.width / 100,
+                            height: parseFloat(obj.height) * bannerData.height / 100
+                        });
+                        layer.add(img);
+                        layer.draw();
+                    });
+                } else if (obj.type === 'text') {
+                    const text = new Konva.Text({
+                        x: parseFloat(obj.left) * bannerData.width / 100,
+                        y: parseFloat(obj.top) * bannerData.height / 100,
+                        text: obj.text || 'Default Text',
+                        fontSize: obj.fontSize,
+                        fill: obj.fill,
+                        fontFamily: obj.fontFamily || 'Arial', 
+                        fontStyle: obj.fontStyle || 'normal', 
+                        fontWeight: obj.fontWeight || 'normal', 
+                        align: obj.textAlign || 'left' 
+                    });
+                    layer.add(text);
+                    layer.draw();
+                }
             }
         });
+
+        // Add a delay to ensure images are fully loaded
+        setTimeout(() => {
+            // Convert Konva stage to image
+            const imageDataUrl = stage.toDataURL({ pixelRatio: 1 }); // Use pixelRatio: 1 for correct sizing
+
+            // Set the preview image source
+            bannerPreview.src = imageDataUrl;
+
+            // Hide loading overlay and show image preview
+            loadingOverlay.style.display = 'none';
+            imagePreviewContainer.style.display = 'block';
+            downloadButton.style.display = 'inline-block';
+
+            // Set up download functionality
+            downloadButton.onclick = () => {
+                const link = document.createElement('a');
+                link.download = 'generated_banner.png';
+                link.href = imageDataUrl;
+                link.click();
+            };
+
+            document.getElementById('advanced-edit-button').style.display = 'inline-block'; 
+        }, 1000);
+    }
+
+    function openAdvancedEditor() {
+        // Get Konva stage data
+        const stage = Konva.stages[0]; // Assuming you have only one stage
+        const stageJSON = stage.toJSON();
+
+        // add width and height to the canvasJSON
+        const canvasResolution = getResolution();
+
+        // Store the stage data in localStorage
+        localStorage.setItem('canvasData', stageJSON);
+        localStorage.setItem('canvasResolution', canvasResolution);
+
+        // Open the advanced editor in a new window
+        window.open('/advanced-editor', '_blank');
+    }
+
+    // Add event listener for window resize
+    window.addEventListener('resize', () => {
+        const bannerPreview = document.getElementById('banner-preview');
+        if (bannerPreview.src) {
+            bannerPreview.style.width = '';
+            bannerPreview.style.height = '';
+        }
+    });
 
    </script>
 </body>

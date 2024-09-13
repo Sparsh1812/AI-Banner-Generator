@@ -11,8 +11,14 @@ import logging
 import math
 from gradio_client import Client
 
+from flask_cors import CORS
+
+
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
+
+# Enable CORS for all routes and origins
+CORS(app)
 
 # Configure Gemini API
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
@@ -138,7 +144,7 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         Promotion: {promotion}
         Theme: {theme}
         Resolution: {width}x{height}
-        Color Palette: {color_palette}
+        Color Palette: {color_palette} (background image consists of combination of these colors)
 
         Provide the following in a JSON format (without any comments):
         {{

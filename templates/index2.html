@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Banner Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --text-color: #ffffff;
+            --input-bg: #2a2a3e;
+            --accent-color: #8a2be2;
+            --preview-bg: #2a2a3e;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 30px;
+        }
+        .content {
+            display: flex;
+            gap: 20px;
+        }
+        .controls {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .preview {
+            flex: 1;
+            background-color: var(--preview-bg);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--input-bg);
+            border: none;
+            color: var(--text-color);
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #9d4edd;
+        }
+        .color-palette {
+            display: flex;
+            gap: 10px;
+        }
+        .color-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--text-color);
+        }
+        #image-previews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .image-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        #banner-preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--accent-color);
+        }
+        #error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Banner Generator</h1>
+        <div class="content">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="promotion">🎉 Promotion</label>
+                    <input type="text" id="promotion" placeholder="Enter promotional offer details">
+                </div>
+                <div class="control-group">
+                    <label for="theme">🌈 Theme</label>
+                    <input type="text" id="theme" placeholder="Enter theme (e.g., Summer, Diwali)">
+                </div>
+                <div class="control-group">
+                    <label for="color-palette">🎨 Color Palette</label>
+                    <div class="color-palette">
+                        <input type="color" id="color1" class="color-circle" value="#FF5733">
+                        <input type="color" id="color2" class="color-circle" value="#33FF57">
+                        <input type="color" id="color3" class="color-circle" value="#3357FF">
+                        <input type="color" id="color4" class="color-circle" value="#FF33F1">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="images">🖼️ Upload Images</label>
+                    <input type="file" id="images" accept="image/*" multiple>
+                    <div id="image-previews"></div>
+                </div>
+                <div class="control-group">
+                    <label for="resolution">🖥️ Resolution</label>
+                    <select id="resolution">
+                        <option value="1920x600">1920x600</option>
+                        <option value="1024x480">1024x480</option>
+                        <option value="1200x600">1200x600</option>
+                        <option value="1024x512">1024x512</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <div id="custom-resolution" style="display:none; margin-top: 10px;">
+                        <input type="number" id="custom-width" placeholder="Width" style="width: 45%;">
+                        <input type="number" id="custom-height" placeholder="Height" style="width: 45%; margin-left: 5%;">
+                    </div>
+                </div>
+                <button onclick="generateBanner()">Generate Banner ✨</button>
+            </div>
+            <div class="preview">
+                <h2>Preview</h2>
+                <div id="image-preview-container">
+                    <img id="banner-preview" alt="Banner Preview">
+                </div>
+                <div id="loading-overlay" style="display:none;">
+                    Generating banner...
+                </div>
+                <div id="error-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let canvas = new fabric.Canvas('canvas');
+        const resolutionSelect = document.getElementById('resolution');
+        const customResolution = document.getElementById('custom-resolution');
+
+        resolutionSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customResolution.style.display = 'block';
+            } else {
+                customResolution.style.display = 'none';
+            }
+        });
+
+        document.getElementById('images').addEventListener('change', function(event) {
+            const previews = document.getElementById('image-previews');
+            previews.innerHTML = '';
+            for (let file of event.target.files) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'image-preview';
+                previews.appendChild(img);
+            }
+        });
+
+        function getResolution() {
+            const resolution = resolutionSelect.value;
+            
+            if (resolution === 'custom') {
+                const width = document.getElementById('custom-width').value;
+                const height = document.getElementById('custom-height').value;
+                return `${width}x${height}`;
+            }
+            return resolution;
+        }
+
+        function getColorPalette() {
+            return [
+                document.getElementById('color1').value,
+                document.getElementById('color2').value,
+                document.getElementById('color3').value,
+                document.getElementById('color4').value
+            ];
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function generateBanner() {
+            const promotion = document.getElementById('promotion').value;
+            const theme = document.getElementById('theme').value;
+            const resolution = getResolution();
+            const colorPalette = getColorPalette();
+            const imageFiles = document.getElementById('images').files;
+            const errorMessageElement = document.getElementById('error-message');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const imagePreviewContainer = document.getElementById('image-preview-container');
+            const bannerPreview = document.getElementById('banner-preview');
+
+            errorMessageElement.textContent = '';
+
+            if (imageFiles.length === 0) {
+                errorMessageElement.textContent = 'Please upload at least one image.';
+                return;
+            }
+
+            loadingOverlay.style.display = 'flex';
+            imagePreviewContainer.style.display = 'none';
+
+            try {
+                const imageDataList = await Promise.all(Array.from(imageFiles).map(readFileAsDataURL));
+
+                const requestData = {
+                    promotion: promotion,
+                    theme: theme,
+                    resolution: resolution,
+                    color_palette: colorPalette,
+                    images: imageDataList.map(data => data.split(',')[1])
+                };
+
+                const response = await fetch('http://127.0.0.1:5000/generate_banner', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const bannerData = await response.json();
+                renderBanner(bannerData);
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageElement.textContent = `An error occurred: ${error.message}`;
+                imagePreviewContainer.style.display = 'block';
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function renderBanner(bannerData) {
+            const bannerPreview = document.getElementById('banner-preview');
+            const downloadButton = document.getElementById('download-button');
+            
+            canvas.clear();
+            canvas.setWidth(bannerData.width);
+            canvas.setHeight(bannerData.height);
+
+            bannerData.objects.forEach(obj => {
+                if (obj.type === 'image') {
+                    fabric.Image.fromURL(obj.src, (img) => {
+                        img.set({
+                            left: parseFloat(obj.left) * canvas.width / 100,
+                            top: parseFloat(obj.top) * canvas.height / 100,
+                            scaleX: parseFloat(obj.width) / 100,
+                            scaleY: parseFloat(obj.height) / 100
+                        });
+                        canvas.add(img);
+                    });
+                } else if (obj.type === 'text') {
+                    const text = new fabric.Text(obj.text, {
+                        left: parseFloat(obj.left) * canvas.width / 100,
+                        top: parseFloat(obj.top) * canvas.height / 100,
+                        fontSize: obj.fontSize,
+                        fill: obj.fill,
+                        fontWeight: obj.fontWeight,
+                        fontStyle: obj.fontStyle,
+                        fontFamily: obj.fontFamily,
+                        textAlign: obj.textAlign
+                    });
+                    canvas.add(text);
+                }
+            });
+
+            canvas.renderAll();
+
+            setTimeout(() => {
+                const imageDataUrl = canvas.toDataURL({ format: 'png' });
+                bannerPreview.src = imageDataUrl;
+                bannerPreview.style.display = 'block';
+                
+                if (!downloadButton) {
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.id = 'download-button';
+                    downloadBtn.textContent = 'Download Banner';
+                    downloadBtn.onclick = () => {
+                        const link = document.createElement('a');
+                        link.download = 'generated_banner.png';
+                        link.href = imageDataUrl;
+                        link.click();
+                    };
+                    document.querySelector('.preview').appendChild(downloadBtn);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
