@@ -403,7 +403,8 @@
                         fabric.Image.fromURL(obj.src, (img) => {
                             img.set({
                                 left: parseFloat(obj.left) * canvas.width / 100,
-                                top: parseFloat(obj.top) * canvas.height / 100,
+                                top: obj.top ? parseFloat(obj.top) * canvas.height / 100 : 
+                                (obj.bottom ? canvas.height - parseFloat(obj.bottom) * canvas.height / 100 - img.height * parseFloat(obj.height) / 100 : 0),
                                 scaleX: parseFloat(obj.width) / 100,
                                 scaleY: parseFloat(obj.height) / 100
                             });
@@ -413,7 +414,8 @@
                     } else if (obj.type === 'text') {
                         const text = new fabric.Text(obj.text || 'Default Text', {
                             left: parseFloat(obj.left) * canvas.width / 100,
-                            top: parseFloat(obj.top) * canvas.height / 100,
+                            top: obj.top ? parseFloat(obj.top) * canvas.height / 100 : 
+                            (obj.bottom ? canvas.height - parseFloat(obj.bottom) * canvas.height / 100 - parseFloat(obj.fontSize) : 0),
                             fontSize: obj.fontSize,
                             fill: obj.fill,
                             fontWeight: obj.fontWeight,

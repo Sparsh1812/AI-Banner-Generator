@@ -24,42 +24,46 @@ CORS(app)
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Initialize FLUX.1 schnell client
+# HF_TOKEN = os.environ.get("HF_TOKEN")
+
+# flux_client = Client.duplicate("black-forest-labs/FLUX.1-schnell", hf_token=HF_TOKEN)
 flux_client = Client("black-forest-labs/FLUX.1-schnell")
+# flux_client = Client("ChristianHappy/FLUX.1-schnell")
 
 # Updated templates to support multiple images
 TEMPLATES = [
+    # templates for 1360x800 resolution
     {
+        "resolution": "1360x800",
+        "num_images": 1,    
         "objects": [
-            {"type":"text","left":"53.92%","top":"36.33%","width":"25.64%","height":"11.00%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"56.52%","top":"50.44%","width":"19.16%","height":"8.98%","fontSize":22,"fill":"s","fontWeight":"","fontStyle":"italic","textAlign":"left","text":""},
-            {"type":"image","left":"4.33%","top":"29.33%","width":"40.00%","height":"40.00%","src":""}
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
         ]
     },
     {
+        "resolution": "1360x800",
+        "num_images": 2,    
         "objects": [
-            {"type":"text","left":"44.00%","top":"9.50%","width":"9.66%","height":"4.14%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"37.58%","top":"16.17%","width":"21.09%","height":"9.05%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"center","text":""},
-            {"type":"image","left":"11.67%","top":"43.33%","width":"40.00%","height":"40.00%","src":""},
-            {"type":"image","left":"47.00%","top":"43.50%","width":"40.00%","height":"43.33%","src":""}
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
+            {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
         ]
     },
     {
+        "resolution": "1360x800",
+        "num_images": 3,    
         "objects": [
-            {"type":"text","left":"15.91%","top":"44.83%","width":"15.81%","height":"6.78%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"67.11%","top":"78.44%","width":"8.84%","height":"4.14%","fontSize":22,"fill":"s","fontWeight":"","fontStyle":"italic","textAlign":"left","text":""},
-            {"type":"image","left":"48.67%","top":"21.77%","width":"45.92%","height":"52.33%","src":""}
-        ]
-    },
-    {
-        "objects": [
-            {"type":"text","left":"6.92%","top":"34.00%","width":"33.08%","height":"14.19%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"9.42%","top":"48.33%","width":"27.48%","height":"11.79%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"center","text":""},
-            {"type":"image","left":"55.33%","top":"14.00%","width":"40.00%","height":"40.00%","src":""},
-            {"type":"image","left":"51.08%","top":"28.00%","width":"40.00%","height":"40.00%","src":""}
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
+            {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
+            {"type":"image","left":"82.47%","bottom":"16.39%","width":"50%","height":"50%","src":""}
         ]
     }
 ]
-
 
 
 
@@ -85,20 +89,19 @@ def image_to_base64(image_path):
 
 
 def round_percentages(template):
-    for item in template:
-        for obj in item['objects']:
-            # Update 'left', 'top', 'width', 'height' values
-            for key in ['left', 'top', 'width', 'height']:
-                if key in obj:
-                    value = obj[key]
-                    if isinstance(value, str) and value.endswith('%'):
-                        numeric_value = float(value.strip('%'))
-                        rounded_value = math.ceil(numeric_value)
-                        obj[key] = f"{rounded_value}%"
-                    elif isinstance(value, (int, float)):
-                        # Assuming the value is in percentage and needs rounding
-                        rounded_value = math.ceil(value)
-                        obj[key] = f"{rounded_value}%"
+    for obj in template['objects']:
+        # Update 'left', 'top', 'width', 'height' values
+        for key in ['left', 'bottom', 'width', 'height']:
+            if key in obj:
+                value = obj[key]
+                if isinstance(value, str) and value.endswith('%'):
+                    numeric_value = float(value.strip('%'))
+                    rounded_value = math.ceil(numeric_value)
+                    obj[key] = f"{rounded_value}%"
+                elif isinstance(value, (int, float)):
+                    # Assuming the value is in percentage and needs rounding
+                    rounded_value = math.ceil(value)
+                    obj[key] = f"{rounded_value}%"
     return template
 
 def calculate_responsive_position(element_type, index, total_elements, width, height):
@@ -131,10 +134,39 @@ def apply_responsive_design(template, width, height):
     
     return template
 
+def select_template(resolution, num_images):
+    """
+    Selects the appropriate template based on resolution and number of images.
+    Falls back to a default template if no exact match is found.
+    """
+    filtered_templates = []
+    for template in TEMPLATES:
+        if template['resolution'] == resolution and template['num_images'] == num_images:
+            # add to filtered templates
+            filtered_templates.append(template)
+    # if filtered templates are not empty, return a random template from filtered templates
+    if filtered_templates:
+        return random.choice(filtered_templates)
+    else:
+        # Fallback: match resolution regardless of image count
+        for template in TEMPLATES:
+            if template['resolution'] == resolution:
+                filtered_templates.append(template)
+    # if filtered templates are not empty, return a random template from filtered templates
+    if filtered_templates:
+        return random.choice(filtered_templates)
+    else:
+        # Fallback: return a default template
+        return random.choice(TEMPLATES)
+
 def generate_banner(promotion, theme, resolution, color_palette, image_data_list):
     try:
-        updated_templates = round_percentages(TEMPLATES)
-        template = random.choice(updated_templates)
+        num_images = len(image_data_list)
+        print("Number of images: ", num_images)
+        selected_template = select_template(resolution, num_images)
+        print("Selected template: ", selected_template)
+        template = round_percentages(selected_template.copy())
+        print("Rounded template: ", template)
        
         width, height = map(int, resolution.split('x'))
 
@@ -144,15 +176,15 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         Promotion: {promotion}
         Theme: {theme}
         Resolution: {width}x{height}
-        Color Palette: {color_palette} (background image consists of combination of these colors)
+        Color Palette (background image): {color_palette} (background image consists of combination of these colors)
 
         Provide the following in a JSON format (without any comments):
         {{
-            "mainText": "Main text for the promotion (be creative)",
-            "secondaryText": "Secondary text (if applicable)",
+            "mainText": "Main text for the promotion (be creative, smaller than secondary text, should have promotion message)", 
+            "secondaryText": "Secondary text (if applicable)", (should be less than 8 words)
             "textColors": {{
-                "mainText": "Color for main text",
-                "secondaryText": "Color for secondary text"
+                "mainText": "Color for main text", (should look good on the background colors)
+                "secondaryText": "Color for secondary text" (should look good on the background colors)
             }},
             "objectPositions": [ # don't add src for image objects
                 {{"type": "text", "left": "10-90%", "top": "10-90%"}},
