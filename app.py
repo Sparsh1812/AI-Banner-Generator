@@ -10,6 +10,7 @@ import json
 import logging
 import math
 from gradio_client import Client
+import copy
 
 from flask_cors import CORS
 
@@ -23,12 +24,7 @@ CORS(app)
 # Configure Gemini API
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# Initialize FLUX.1 schnell client
-# HF_TOKEN = os.environ.get("HF_TOKEN")
 
-# flux_client = Client.duplicate("black-forest-labs/FLUX.1-schnell", hf_token=HF_TOKEN)
-flux_client = Client("black-forest-labs/FLUX.1-schnell")
-# flux_client = Client("ChristianHappy/FLUX.1-schnell")
 
 # Updated templates to support multiple images
 TEMPLATES = [
@@ -37,17 +33,17 @@ TEMPLATES = [
         "resolution": "1360x800",
         "num_images": 1,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
-            {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":65,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"image","left":"62%","bottom":"7%","width":"70%","height":"70%","src":""},
         ]
     },
     {
         "resolution": "1360x800",
         "num_images": 2,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":35,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":60,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
         ]
@@ -72,6 +68,7 @@ def generate_background(theme, color_palette, canvasWidth, canvasHeight):
     colors = ",".join(color_palette)
     prompt = f"abstract background image banner, background theme: {theme}, background colors: {colors}"
     print(f"Generating background image for: {prompt}")
+    flux_client = Client("black-forest-labs/FLUX.1-schnell")
     result = flux_client.predict(
         prompt=prompt,
         seed=0,
@@ -160,6 +157,8 @@ def select_template(resolution, num_images):
         return random.choice(TEMPLATES)
 
 def generate_banner(promotion, theme, resolution, color_palette, image_data_list):
+    # modify this such that the PIL is used to convert the background image path to file which could be passed 
+    # to the gemini api for figuring out text colors based on background image.
     try:
         num_images = len(image_data_list)
         print("Number of images: ", num_images)
@@ -169,32 +168,26 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         print("Rounded template: ", template)
        
         width, height = map(int, resolution.split('x'))
-
+        #template_copy that has a deep copy of the template
+        template_copy = copy.deepcopy(template)
         prompt = f"""
         Create a banner design based on the following:
-        Template: {template['objects']}
+        Template: {template_copy['objects']}
         Promotion: {promotion}
         Theme: {theme}
         Resolution: {width}x{height}
         Color Palette (background image): {color_palette} (background image consists of combination of these colors)
 
-        Provide the following in a JSON format (without any comments):
+        Return JSON only:
         {{
-            "mainText": "Main text for the promotion (be creative, smaller than secondary text, should have promotion message)", 
-            "secondaryText": "Secondary text (if applicable)", (should be less than 8 words)
-            "textColors": {{
-                "mainText": "Color for main text", (should look good on the background colors)
-                "secondaryText": "Color for secondary text" (should look good on the background colors)
-            }},
-            "objectPositions": [ # don't add src for image objects
-                {{"type": "text", "left": "10-90%", "top": "10-90%"}},
-                {{"type": "text", "left": "10-90%", "top": "10-90%"}},
-                {{"type": "image", "left": "10-90%", "top": "10-90%", "width": "20-80%", "height": "20-80%"}}
-            ]
+        "mainText": "<promotion text, keep it short>",
+        "secondaryText": "<if applicable, max 7 words, be creative>",
+        "textColors": {{
+            "mainText": "<contrasting with background color palette>",
+            "secondaryText": "<contrasting with background color palette>"
         }}
-
-        Use proper design principles to position and size the objects based on given resolution. Ensure text is readable and images are prominently displayed.
-        Percentages for positions should be within the specified ranges. The response should be json only.
+        }}
+        Apply design principles for readability and prominence. Return JSON only.
         """
 
         model = genai.GenerativeModel('gemini-1.5-flash')
@@ -247,13 +240,14 @@ def parse_gemini_response(response_text):
         raise ValueError("Invalid JSON response from Gemini API")
 
 def apply_design_choices(template, choices, width, height, image_data_list):
+    # Reset image_index for each function call
     image_index = 0
-    for i, (obj, position) in enumerate(zip(template['objects'], choices['objectPositions'])):
+    for obj in template['objects']:
         if obj['type'] == 'text':
-            if 'mainText' in choices and obj['fontSize'] > 35:
+            if 'mainText' in choices and obj['fontSize'] > 50:
                 obj['text'] = choices['mainText'] or ""
                 obj['fill'] = choices['textColors'].get('mainText', '#000000')
-            elif 'secondaryText' in choices and obj['fontSize'] <= 35:
+            elif 'secondaryText' in choices and obj['fontSize'] <= 49:
                 obj['text'] = choices['secondaryText'] or ""
                 obj['fill'] = choices['textColors'].get('secondaryText', '#000000')
 
@@ -263,18 +257,16 @@ def apply_design_choices(template, choices, width, height, image_data_list):
             obj['fontStyle'] = obj.get('fontStyle', 'normal')
             obj['textAlign'] = obj.get('textAlign', 'left')
 
-        elif obj['type'] == 'image' and image_index < len(image_data_list):
-            obj['src'] = f"data:image/jpeg;base64,{image_data_list[image_index]}"
-            image_index += 1
+        elif obj['type'] == 'image':
+            if image_index < len(image_data_list) and image_data_list[image_index]:
+                obj['src'] = f"data:image/jpeg;base64,{image_data_list[image_index]}"
+                image_index += 1
+            else:
+                # Remove the image object if no data is available
+                obj['src'] = ''
 
-
-        # Update position values using Gemini response
-        # obj['left'] = position['left']
-        # obj['top'] = position['top']
-        # if 'width' in position:
-        #     obj['width'] = position['width']
-        # if 'height' in position:
-        #     obj['height'] = position['height']
+    # Remove any image objects with empty src
+    template['objects'] = [obj for obj in template['objects'] if obj['type'] != 'image' or obj['src']]
 
     template['width'] = width
     template['height'] = height
