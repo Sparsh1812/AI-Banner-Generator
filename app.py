@@ -34,7 +34,7 @@ TEMPLATES = [
         "num_images": 1,    
         "objects": [
             {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":65,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":65,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
             {"type":"image","left":"62%","bottom":"7%","width":"70%","height":"70%","src":""},
         ]
     },
@@ -42,8 +42,8 @@ TEMPLATES = [
         "resolution": "1360x800",
         "num_images": 2,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":35,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":60,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"text","left":"6.00%","bottom":"55.89%","width":"50%","height":"100%","fontSize":58,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"80%","height":"100%","fontSize":60,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
         ]
@@ -53,7 +53,7 @@ TEMPLATES = [
         "num_images": 3,    
         "objects": [
             {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"center","text":""},
+            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"82.47%","bottom":"16.39%","width":"50%","height":"50%","src":""}
@@ -101,36 +101,6 @@ def round_percentages(template):
                     obj[key] = f"{rounded_value}%"
     return template
 
-def calculate_responsive_position(element_type, index, total_elements, width, height):
-    if element_type == "text":
-        return {
-            "left": f"{20 + (index * 30)}%",
-            "top": f"{20 + (index * 20)}%",
-            "width": f"{min(60, 100 - (20 + (index * 30)))}%",
-            "height": "auto"
-        }
-    elif element_type == "image":
-        image_width = min(40, 90 / total_elements)
-        return {
-            "left": f"{10 + (index * (image_width + 5))}%",
-            "top": "30%",
-            "width": f"{image_width}%",
-            "height": f"{image_width * (height / width)}%"
-        }
-    
-def apply_responsive_design(template, width, height):
-    text_elements = [obj for obj in template["objects"] if obj["type"] == "text"]
-    image_elements = [obj for obj in template["objects"] if obj["type"] == "image"]
-    
-    for i, element in enumerate(text_elements):
-        element.update(calculate_responsive_position("text", i, len(text_elements), width, height))
-        element["fontSize"] = max(12, min(36, int(height * 0.05)))  # Responsive font size
-    
-    for i, element in enumerate(image_elements):
-        element.update(calculate_responsive_position("image", i, len(image_elements), width, height))
-    
-    return template
-
 def select_template(resolution, num_images):
     """
     Selects the appropriate template based on resolution and number of images.
@@ -161,11 +131,11 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
     # to the gemini api for figuring out text colors based on background image.
     try:
         num_images = len(image_data_list)
-        print("Number of images: ", num_images)
+        # print("Number of images: ", num_images)
         selected_template = select_template(resolution, num_images)
-        print("Selected template: ", selected_template)
+        # print("Selected template: ", selected_template)
         template = round_percentages(selected_template.copy())
-        print("Rounded template: ", template)
+        # print("Rounded template: ", template)
        
         width, height = map(int, resolution.split('x'))
         #template_copy that has a deep copy of the template
@@ -197,24 +167,13 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
 
         design_choices = parse_gemini_response(response.text)
 
-                # Apply design choices and responsive design
+        # Apply design choices 
         modified_template = apply_design_choices(template, design_choices, width, height, image_data_list)
-        # responsive_template = apply_responsive_design(modified_template, width, height)
 
         # Generate background image
         background_image_path = generate_background(theme, color_palette, width, height)[0]
         background_image_base64 = image_to_base64(background_image_path)
-        # responsive_template['objects'].insert(0, {
-        #     "type": "image",
-        #     "left": "0%",
-        #     "top": "0%",
-        #     "width": "100%",
-        #     "height": "100%",
-        #     "src": f"data:image/png;base64,{background_image_base64}"
-        # })
-        # modified_template = apply_design_choices(template, design_choices, width, height, image_data_list)
 
-        # Add background image to the template (flux ai generated image)
         modified_template['objects'].insert(0, {
             "type": "image",
             "left": "0%",
@@ -238,16 +197,27 @@ def parse_gemini_response(response_text):
         logging.error(f"JSON parsing error: {str(e)}")
         logging.error(f"Raw response: {response_text}")
         raise ValueError("Invalid JSON response from Gemini API")
+    
+def get_smallest_font_size(template):
+    smallest_font_size = float('inf')
+    for obj in template['objects']:
+        if obj['type'] == 'text':
+            if obj['fontSize'] < smallest_font_size:
+                smallest_font_size = obj['fontSize']
+    return smallest_font_size
 
 def apply_design_choices(template, choices, width, height, image_data_list):
     # Reset image_index for each function call
     image_index = 0
+    # compare font size of text objects and store the smallest one
+    smallest_font_size = get_smallest_font_size(template)
+
     for obj in template['objects']:
         if obj['type'] == 'text':
-            if 'mainText' in choices and obj['fontSize'] > 50:
+            if 'mainText' in choices and obj['fontSize'] > smallest_font_size:
                 obj['text'] = choices['mainText'] or ""
                 obj['fill'] = choices['textColors'].get('mainText', '#000000')
-            elif 'secondaryText' in choices and obj['fontSize'] <= 49:
+            elif 'secondaryText' in choices and obj['fontSize'] <= smallest_font_size:
                 obj['text'] = choices['secondaryText'] or ""
                 obj['fill'] = choices['textColors'].get('secondaryText', '#000000')
 
