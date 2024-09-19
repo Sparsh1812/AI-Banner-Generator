@@ -140,12 +140,25 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         width, height = map(int, resolution.split('x'))
         #template_copy that has a deep copy of the template
         template_copy = copy.deepcopy(template)
+
+        background_image_path = generate_background(theme, color_palette, width, height)[0]
+        background_image_base64 = image_to_base64(background_image_path)
+        background_image = Image.open(io.BytesIO( base64.b64decode(background_image_base64))) # for sending background image to gemini
+        input_images_list = []
+
+        for image_data in image_data_list:
+            # converting base64 encoded data to image for gemini api request
+            decoded_image = Image.open(io.BytesIO( base64.b64decode(image_data.split(",")[1])))
+            input_images_list.append(decoded_image)
+        
         prompt = f"""
         Create a banner design based on the following:
         Template: {template_copy['objects']}
         Promotion: {promotion}
         Theme: {theme}
         Resolution: {width}x{height}
+        Background image: <the first image is background image of banner design>
+        Product images: <the images except the first one are product images of banner design>
         Color Palette (background image): {color_palette} (background image consists of combination of these colors)
 
         Return JSON only:
@@ -153,15 +166,17 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         "mainText": "<promotion text, keep it short>",
         "secondaryText": "<if applicable, max 7 words, be creative>",
         "textColors": {{
-            "mainText": "<contrasting with background color palette>",
-            "secondaryText": "<contrasting with background color palette>"
-        }}
+            "mainText": "<contrasting with background image>",
+            "secondaryText": "<contrasting with background image>"
+        }},
+        "backgroundImage": <concise and brief description of background image>,
+        "products": <write name of each product seperated by ",">
         }}
         Apply design principles for readability and prominence. Return JSON only.
         """
 
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(prompt)
+        response = model.generate_content([prompt, background_image]+input_images_list)
 
         logging.debug(f"Gemini API response: {response.text}")
 
@@ -171,8 +186,8 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
         modified_template = apply_design_choices(template, design_choices, width, height, image_data_list)
 
         # Generate background image
-        background_image_path = generate_background(theme, color_palette, width, height)[0]
-        background_image_base64 = image_to_base64(background_image_path)
+        # background_image_path = generate_background(theme, color_palette, width, height)[0]
+        # background_image_base64 = image_to_base64(background_image_path)
 
         modified_template['objects'].insert(0, {
             "type": "image",
