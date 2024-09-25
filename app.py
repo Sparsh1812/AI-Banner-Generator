@@ -13,6 +13,8 @@ from gradio_client import Client
 import copy
 
 from flask_cors import CORS
+# from huggingface_hub import login
+# login(token=os.environ.get("HF_TOKEN"))
 
 
 app = Flask(__name__)
@@ -25,6 +27,9 @@ CORS(app)
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 
+flux_client = Client("black-forest-labs/FLUX.1-schnell")
+
+
 
 # Updated templates to support multiple images
 TEMPLATES = [
@@ -33,17 +38,26 @@ TEMPLATES = [
         "resolution": "1360x800",
         "num_images": 1,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":65,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
-            {"type":"image","left":"62%","bottom":"7%","width":"70%","height":"70%","src":""},
+        {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+        {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+        {"type":"image","left":"62%","bottom":"7%","width":"70%","height":"70%","src":""},
+        ]
+    },
+    {
+        "resolution": "1360x800",
+        "num_images": 1,
+        "objects": [
+            {"type":"text","left":"7.52%","bottom":"49.90%","width":"48.99%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"7.02%","bottom":"38.15%","width":"48.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"70.34%","bottom":"8.05%","width":"70%","height":"70%","src":""}
         ]
     },
     {
         "resolution": "1360x800",
         "num_images": 2,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"50%","height":"100%","fontSize":58,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"80%","height":"100%","fontSize":60,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
+            {"type":"text","left":"6.00%","bottom":"49.55%","width":"44.23%","height":"100%","fontSize":50,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Trebuchet MS"},
+            {"type":"text","left":"6.00%","bottom":"33.03%","width":"43.91%","height":"100%","fontSize":60,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Verdana"},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
         ]
@@ -52,8 +66,8 @@ TEMPLATES = [
         "resolution": "1360x800",
         "num_images": 3,    
         "objects": [
-            {"type":"text","left":"6.00%","bottom":"55.89%","width":"100%","height":"100%","fontSize":22,"fill":"s","fontWeight":"bold","fontStyle":"","textAlign":"left","text":""},
-            {"type":"text","left":"6.00%","bottom":"36.91%","width":"100%","height":"100%","fontSize":36,"fill":"s","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":""},
+            {"type":"text","left":"7.52%","bottom":"49.90%","width":"48.99%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"7.02%","bottom":"38.15%","width":"48.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"82.47%","bottom":"16.39%","width":"50%","height":"50%","src":""}
@@ -68,7 +82,7 @@ def generate_background(theme, color_palette, canvasWidth, canvasHeight):
     colors = ",".join(color_palette)
     prompt = f"abstract background image banner, background theme: {theme}, background colors: {colors}"
     print(f"Generating background image for: {prompt}")
-    flux_client = Client("black-forest-labs/FLUX.1-schnell")
+    # flux_client = Client("black-forest-labs/FLUX.1-schnell")
     result = flux_client.predict(
         prompt=prompt,
         seed=0,
@@ -125,6 +139,7 @@ def select_template(resolution, num_images):
     else:
         # Fallback: return a default template
         return random.choice(TEMPLATES)
+    
 
 def generate_banner(promotion, theme, resolution, color_palette, image_data_list):
     # modify this such that the PIL is used to convert the background image path to file which could be passed 
@@ -132,51 +147,66 @@ def generate_banner(promotion, theme, resolution, color_palette, image_data_list
     try:
         num_images = len(image_data_list)
         # print("Number of images: ", num_images)
-        selected_template = select_template(resolution, num_images)
-        # print("Selected template: ", selected_template)
-        template = round_percentages(selected_template.copy())
-        # print("Rounded template: ", template)
-       
-        width, height = map(int, resolution.split('x'))
-        #template_copy that has a deep copy of the template
-        template_copy = copy.deepcopy(template)
 
+        input_images_list = []
+        has_atleast_one_potrait_image = False
+        for image_data in image_data_list: # converting base64 encoded data to image for gemini api request
+            decoded_image = Image.open(io.BytesIO( base64.b64decode(image_data.split(",")[1])))
+            input_images_list.append(decoded_image)
+            img_width, img_height = decoded_image.size #could be used for checking if image is landscape or potrait
+            print("IMAGE RES: ", f'{img_width}, {img_height}')
+            if img_height > img_width:
+                has_atleast_one_potrait_image = True
+        
+        
+        selected_template = select_template(resolution, num_images)
+        template = round_percentages(copy.deepcopy(selected_template))
+        
+        # modifying the current template position of images if all images are of landscape resolution
+        if not has_atleast_one_potrait_image:
+            for obj in template['objects']:
+                if obj['type'] == 'image':
+                    if 'bottom' in obj and 'left' in obj:
+                        bottom = int(obj['bottom'].rstrip('%'))
+                        left = int(obj['left'].rstrip('%'))
+                        obj['bottom'] = str(min(100, bottom + 15)) + "%" #inc by 15%
+                        obj['left'] = str(max(0, left - 5)) + "%" #dec by 5%
+
+        width, height = map(int, resolution.split('x'))
+
+        # Generate background image
         background_image_path = generate_background(theme, color_palette, width, height)[0]
         background_image_base64 = image_to_base64(background_image_path)
         background_image = Image.open(io.BytesIO( base64.b64decode(background_image_base64))) # for sending background image to gemini
-        input_images_list = []
-
-        for image_data in image_data_list:
-            # converting base64 encoded data to image for gemini api request
-            decoded_image = Image.open(io.BytesIO( base64.b64decode(image_data.split(",")[1])))
-            input_images_list.append(decoded_image)
+       
         
         prompt = f"""
         Create a banner design based on the following:
-        Template: {template_copy['objects']}
+        Template: {template['objects']}
         Promotion: {promotion}
         Theme: {theme}
         Resolution: {width}x{height}
         Background image: <the first image is background image of banner design>
         Product images: <the images except the first one are product images of banner design>
-        Color Palette (background image): {color_palette} (background image consists of combination of these colors)
+        Color Palette: {color_palette} (background image may consist of combination of these colors)
 
         Return JSON only:
         {{
-        "mainText": "<promotion text, keep it short>",
-        "secondaryText": "<if applicable, max 7 words, be creative>",
-        "textColors": {{
-            "mainText": "<contrasting with background image>",
-            "secondaryText": "<contrasting with background image>"
-        }},
         "backgroundImage": <concise and brief description of background image>,
-        "products": <write name of each product seperated by ",">
+        "products": <write name of each product seperated by ",">,
+        "mainText": "<promotion text, keep it short>",
+        "secondaryText": "<if applicable, max 7 words, be creative based on products>",
+        "textColors": {{
+            "mainText": "<hex color value for primary text based on colors from the first image>",
+            "secondaryText": "<hex color value for secondary text based on colors from the first image>"
+        }}
+
         }}
         Apply design principles for readability and prominence. Return JSON only.
         """
 
         model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content([prompt, background_image]+input_images_list)
+        response = model.generate_content([prompt, background_image]+input_images_list) #input_images_list has input images
 
         logging.debug(f"Gemini API response: {response.text}")
 
