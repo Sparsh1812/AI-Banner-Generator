@@ -8,7 +8,7 @@ This Flask app dynamically generates image banners based on user-provided themes
 
 2. **LLM-powered Template Generation:**
     - When a suitable template is not found from the predefined list, the app dynamically generates one using the Gemini large language model (LLM) through the `generate_template_with_gemini` function.
-    - This function employs a few-shot prompting technique, where it provides the Gemini LLM with two input parameters `resolution` and `num_images` and their corresponding desired JSON output (template structures). This enables the LLM to understand the pattern and format expected for template generation.
+    - This function employs a few-shot prompting technique, where it provides the Gemini LLM with input parameters `resolution` and `num_images` and their corresponding desired JSON output (template structures). This enables the LLM to understand the pattern and format expected for template generation.
     - The `parse_gemini_response` function is used to handle the JSON output, ensuring proper formatting, error handling, and data validation. This function is crucial for converting the raw LLM-generated JSON into a usable template that can be further processed by the app for image rendering.
 
 3. **Background Image Generation:**
