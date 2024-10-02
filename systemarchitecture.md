@@ -16,6 +16,11 @@ This Flask app dynamically generates image banners based on user-provided themes
         - **theme:** A user-defined theme that guides the visual style of the background.
         - **color palette:** A set of colors that dictate the overall color scheme of the background, ensuring it aligns with the banner's design.
         - **canvas width and height:** These define the dimensions of the canvas where the background image will be applied, ensuring the background is generated at the correct resolution.
+    - The function constructs a prompt for the Flux image generation model, specifically Flux-1-schnell, based on the theme and color palette. This prompt specifies the artistic and stylistic details required to generate a background image that fits the provided input.
+
+    - The Flux image generation model is invoked with the constructed prompt, along with additional parameters (such as canvas dimensions and possibly stylistic modifiers), ensuring that the output matches the desired design.
+
+    - Finally, the generated background image is returned to be used within the banner creation process. The flexibility in input allows the background to match the overall theme, color scheme, and dimensions of the final banner.
 
 4. **Image Encoding:**
     - The `image_to_base64` function converts the generated background image into a base64 encoded string. This is a common practice for embedding images directly into HTML or JSON responses.
