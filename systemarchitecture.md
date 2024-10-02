@@ -29,7 +29,7 @@ This Flask app dynamically generates image banners based on user-provided themes
     - The Gemini API response, which is expected to be in JSON format, contains descriptions for the background image, a list of hex color values present in the background image, a comma-separated list of product names, the main promotional text, optional secondary text, and hex color values for both main and secondary text.
     - Robust error handling (e.g., `try-except` blocks) is implemented to manage potential issues with the API response or JSON parsing.  The function likely checks for valid JSON structure and handles cases where the API call fails or returns unexpected data.
     - The extracted textual and color information from the Gemini API response is then used to finalize the banner design, integrating it with the background and product images.  This likely involves using image manipulation libraries (like Pillow) to overlay text onto the image.
-    - 
+      
 5. **Image Encoding:**
     -The `image_to_base64` function is responsible for converting the generated background image into a base64 encoded string. This process is essential when the image needs to be transmitted as part of a larger data structure (like JSON) or embedded directly into HTML for efficient web delivery.
 
