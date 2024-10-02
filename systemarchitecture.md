@@ -1,5 +1,5 @@
 ## How this works:
-This Flask app dynamically generates image banners based on user-provided themes, color palettes, and target resolutions. It leverages a large language model (LLM), specifically Gemini, and potentially an image generation model (possibly Flux).  Here's a detailed breakdown of its system design:
+This Flask app dynamically generates image banners based on user-provided themes, color palettes, and target resolutions. It leverages the Gemini large language model (LLM) for text-based tasks and utilizes the Flux model for image generation. Here's a detailed breakdown of its system design:
 
 1. **Template Management:**
     - The app uses a predefined set of `TEMPLATES` (a list of dictionaries). Each template specifies object placements (text and images) for different resolutions and image counts.  These act as layout blueprints.
