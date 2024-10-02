@@ -31,7 +31,6 @@ flux_client = Client("black-forest-labs/FLUX.1-schnell", hf_token=os.environ.get
 
 
 
-# Updated templates to support multiple images
 TEMPLATES = [
     # templates for 1360x800 resolution
     {
@@ -41,15 +40,6 @@ TEMPLATES = [
         {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
         {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
         {"type":"image","left":"62%","bottom":"7%","width":"70%","height":"70%","src":""},
-        ]
-    },
-    {
-        "resolution": "1360x800",
-        "num_images": 1,
-        "objects": [
-            {"type":"text","left":"7.52%","bottom":"49.90%","width":"48.99%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
-            {"type":"text","left":"7.02%","bottom":"38.15%","width":"48.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
-            {"type":"image","left":"70.34%","bottom":"8.05%","width":"70%","height":"70%","src":""}
         ]
     },
     {
@@ -67,7 +57,7 @@ TEMPLATES = [
         "num_images": 3,    
         "objects": [
             {"type":"text","left":"7.52%","bottom":"49.90%","width":"48.99%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
-            {"type":"text","left":"7.02%","bottom":"38.15%","width":"48.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"text","left":"7.02%","bottom":"38.15%","width":"50.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
             {"type":"image","left":"60.42%","bottom":"15.57%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"70.42%","bottom":"15.46%","width":"50%","height":"50%","src":""},
             {"type":"image","left":"82.47%","bottom":"16.39%","width":"50%","height":"50%","src":""}
@@ -77,11 +67,11 @@ TEMPLATES = [
         "resolution": "1360x800",
         "num_images": 3,
         "objects": [
-            {"type":"text","left":"31.37%","bottom":"84.04%","width":"48.00%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
-            {"type":"text","left":"29.13%","bottom":"71.90%","width":"48.00%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
-            {"type":"image","left":"49.25%","bottom":"10.10%","width":"50%","height":"50%","src":""},
-            {"type":"image","left":"29.50%","bottom":"9.82%","width":"50%","height":"50%","src":""},
-            {"type":"image","left":"40.88%","bottom":"10.80%","width":"50%","height":"50%","src":""}
+            {"type":"text","left":"25.62%","bottom":"82.94%","width":"50.55%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"25.50%","bottom":"71.60%","width":"50.30%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"50.00%","bottom":"11.00%","width":"50%","height":"50%","src":""},
+            {"type":"image","left":"30.00%","bottom":"10.00%","width":"50%","height":"50%","src":""},
+            {"type":"image","left":"41.00%","bottom":"11.00%","width":"50%","height":"50%","src":""}
         ]
     },
     {
@@ -123,6 +113,22 @@ TEMPLATES = [
             {"type":"image","left":"66.00%","bottom":"5.84%","width":"50%","height":"50%","src":""}
         ]
     },
+    {
+        "resolution": "1360x800",
+        "num_images": 8,
+        "objects": [
+            {"type":"text","left":"19.25%","bottom":"81.76%","width":"65.31%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Segoe Print"},
+            {"type":"text","left":"21.25%","bottom":"71.73%","width":"59.44%","height":"100%","fontSize":64,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"12.63%","bottom":"4.16%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"22.63%","bottom":"4.16%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"31.88%","bottom":"4.61%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"42.63%","bottom":"4.16%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"52.63%","bottom":"4.61%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"62.00%","bottom":"4.00%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"71.38%","bottom":"4.61%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"80.63%","bottom":"4.16%","width":"40%","height":"40%","src":""}
+        ]
+    },
     # resolution 1920x600
     {
         "resolution": "1920x600",
@@ -157,6 +163,19 @@ TEMPLATES = [
             {"type":"image","left":"60%","bottom":"6.84%","width":"35%","height":"35%","src":""}
         ]
     },
+    {
+        "resolution": "1920x600",
+        "num_images": 5,
+        "objects": [
+            {"type":"text","left":"33.49%","bottom":"83.35%","width":"58.46%","height":"100%","fontSize":30,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Segoe Print"},
+            {"type":"text","left":"35.13%","bottom":"73.31%","width":"53.78%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"30.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"36.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"42.69%","bottom":"7.45%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"48.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"54.44%","bottom":"7.45%","width":"35%","height":"35%","src":""}
+        ]
+    },
     # resolution 1024x512
     {
         "resolution": "1024x512",
@@ -181,7 +200,71 @@ TEMPLATES = [
             {"type":"image","left":"49.44%","bottom":"6.45%","width":"30%","height":"30%","src":""},
             {"type":"image","left":"55.00%","bottom":"5.84%","width":"30%","height":"30%","src":""}
         ]
-    }
+    },
+    {
+        "resolution": "1024x512",
+        "num_images": 1,
+        "objects": [
+            {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":30,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":40,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"65%","bottom":"10%","width":"52%","height":"52%","src":""}
+        ]
+    },
+    {
+        "resolution": "1024x512",
+        "num_images": 3,
+        "objects": [
+            {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":30,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":40,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"60.42%","bottom":"15.57%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"68.42%","bottom":"15.46%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"76.42%","bottom":"16.39%","width":"35%","height":"35%","src":""}
+        ]
+    },
+    # res 1200x600
+    {
+        "resolution": "1200x600",
+        "num_images": 1,
+        "objects": [
+            {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":36,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Gill Sans MT"},
+            {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"65%","bottom":"10%","width":"50%","height":"50%","src":""}
+        ]
+    },
+    {
+        "resolution": "1200x600",
+        "num_images": 5,
+        "objects": [
+            {"type":"text","left":"26.49%","bottom":"83.35%","width":"58.46%","height":"100%","fontSize":30,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Segoe Print"},
+            {"type":"text","left":"31.13%","bottom":"73.31%","width":"53.78%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"25.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"31.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"37.69%","bottom":"7.45%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"43.69%","bottom":"7.00%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"49.44%","bottom":"7.45%","width":"35%","height":"35%","src":""}
+        ]
+    },
+    {
+        "resolution": "1200x600",
+        "num_images": 2,
+        "objects": [
+            {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":36,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Monotype Corsiva"},
+            {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"60.42%","bottom":"15.57%","width":"40%","height":"40%","src":""},
+            {"type":"image","left":"68.42%","bottom":"15.46%","width":"40%","height":"40%","src":""}
+        ]
+    },    
+    {
+        "resolution": "1200x600",
+        "num_images": 3,
+        "objects": [
+            {"type":"text","left":"7.86%","bottom":"49.62%","width":"48%","height":"100%","fontSize":36,"fill":"","fontWeight":"bold","fontStyle":"","textAlign":"left","text":"","fontFamily":"Segoe Print"},
+            {"type":"text","left":"7.44%","bottom":"36.78%","width":"48%","height":"100%","fontSize":48,"fill":"","fontWeight":"bold","fontStyle":"normal","textAlign":"left","text":"","fontFamily":"Arial Black"},
+            {"type":"image","left":"60.42%","bottom":"15.57%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"68.42%","bottom":"15.46%","width":"35%","height":"35%","src":""},
+            {"type":"image","left":"76.42%","bottom":"16.39%","width":"35%","height":"35%","src":""}
+        ]
+    } 
 ]
 
 
@@ -224,6 +307,69 @@ def round_percentages(template):
                     obj[key] = f"{rounded_value}%"
     return template
 
+def generate_template_with_gemini(resolution, num_images):
+    generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 64,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+    }
+
+    model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    generation_config=generation_config,
+    )
+
+    # structured prompt with few shot prompting
+    response = model.generate_content([
+    "For given resolution and number of images, generate fabricjs object template that positions the image and text objects as per resolution in JSON fomat: (Return JSON only)",
+    "input: - resolution: 1360x800\n- num_images: 1",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 1,            \"objects\": [        {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},        {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},        {\"type\":\"image\",\"left\":\"62%\",\"bottom\":\"7%\",\"width\":\"70%\",\"height\":\"70%\",\"src\":\"\"},        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 1",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 1,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.52%\",\"bottom\":\"49.90%\",\"width\":\"48.99%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.02%\",\"bottom\":\"38.15%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"70.34%\",\"bottom\":\"8.05%\",\"width\":\"70%\",\"height\":\"70%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 2",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 2,            \"objects\": [            {\"type\":\"text\",\"left\":\"6.00%\",\"bottom\":\"49.55%\",\"width\":\"44.23%\",\"height\":\"100%\",\"fontSize\":50,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Trebuchet MS\"},            {\"type\":\"text\",\"left\":\"6.00%\",\"bottom\":\"33.03%\",\"width\":\"43.91%\",\"height\":\"100%\",\"fontSize\":60,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Verdana\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"70.42%\",\"bottom\":\"15.46%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 3",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 3,            \"objects\": [            {\"type\":\"text\",\"left\":\"7.52%\",\"bottom\":\"49.90%\",\"width\":\"48.99%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.02%\",\"bottom\":\"38.15%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"70.42%\",\"bottom\":\"15.46%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"82.47%\",\"bottom\":\"16.39%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 3",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 3,        \"objects\": [            {\"type\":\"text\",\"left\":\"31.37%\",\"bottom\":\"84.04%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"29.13%\",\"bottom\":\"71.90%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"49.25%\",\"bottom\":\"10.10%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"29.50%\",\"bottom\":\"9.82%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"40.88%\",\"bottom\":\"10.80%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 3",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 5,        \"objects\": [            {\"type\":\"text\",\"left\":\"28.50%\",\"bottom\":\"83.55%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"30.00%\",\"bottom\":\"70.96%\",\"width\":\"48.00%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"23.00%\",\"bottom\":\"10.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"33.00%\",\"bottom\":\"10.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"55.25%\",\"bottom\":\"10.43%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"44.00%\",\"bottom\":\"10.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"51.50%\",\"bottom\":\"9.20%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 4",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 4,        \"objects\": [            {\"type\":\"text\",\"left\":\"22.25%\",\"bottom\":\"83.22%\",\"width\":\"59.78%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"25.50%\",\"bottom\":\"73.21%\",\"width\":\"51.03%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"48.00%\",\"bottom\":\"4.16%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"28.00%\",\"bottom\":\"4.16%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"58.00%\",\"bottom\":\"4.16%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"38.00%\",\"bottom\":\"4.16%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 6",
+    "output: {\n    \"resolution\": \"1360x800\",\n    \"num_images\": 6,\n    \"objects\": [\n        {\"type\":\"text\",\"left\":\"24.25%\",\"bottom\":\"79.97%\",\"width\":\"55.63%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},\n        {\"type\":\"text\",\"left\":\"25.87%\",\"bottom\":\"69.94%\",\"width\":\"50.28%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},\n        {\"type\":\"image\",\"left\":\"20.88%\",\"bottom\":\"6.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},\n        {\"type\":\"image\",\"left\":\"30.87%\",\"bottom\":\"6.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},\n        {\"type\":\"image\",\"left\":\"39.88%\",\"bottom\":\"6.45%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},\n        {\"type\":\"image\",\"left\":\"50.88%\",\"bottom\":\"6.00%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},\n        {\"type\":\"image\",\"left\":\"61.63%\",\"bottom\":\"6.45%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"},\n        {\"type\":\"image\",\"left\":\"66.00%\",\"bottom\":\"5.84%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}\n    ]\n}",
+    "input: - resolution: 1920x600\n- num_images: 6",
+    "output: {        \"resolution\": \"1920x600\",        \"num_images\": 6,        \"objects\": [            {\"type\":\"text\",\"left\":\"32.49%\",\"bottom\":\"83.35%\",\"width\":\"58.46%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},            {\"type\":\"text\",\"left\":\"35.13%\",\"bottom\":\"73.31%\",\"width\":\"53.78%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"30.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"36.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"42.69%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"48.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"54.44%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"60%\",\"bottom\":\"6.84%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1920x600\n- num_images: 1",
+    "output: {        \"resolution\": \"1920x600\",        \"num_images\": 1,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":38,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":50,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"70%\",\"bottom\":\"7%\",\"width\":\"55%\",\"height\":\"55%\",\"src\":\"\"},        ]    }",
+    "input: - resolution: 1024x512\n- num_images: 2",
+    "output: {        \"resolution\": \"1024x512\",        \"num_images\": 2,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":40,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"45%\",\"height\":\"45%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"68.42%\",\"bottom\":\"15.46%\",\"width\":\"45%\",\"height\":\"45%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1024x512\n- num_images: 6",
+    "output: {        \"resolution\": \"1024x512\",        \"num_images\": 6,        \"objects\": [            {\"type\":\"text\",\"left\":\"32.00%\",\"bottom\":\"83.31%\",\"width\":\"58.46%\",\"height\":\"100%\",\"fontSize\":20,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},            {\"type\":\"text\",\"left\":\"35.63%\",\"bottom\":\"73.27%\",\"width\":\"53.78%\",\"height\":\"100%\",\"fontSize\":32,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"25.69%\",\"bottom\":\"6.00%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"31.69%\",\"bottom\":\"6.00%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"37.69%\",\"bottom\":\"6.45%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"43.69%\",\"bottom\":\"6.00%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"49.44%\",\"bottom\":\"6.45%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"55.00%\",\"bottom\":\"5.84%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1024x512\n- num_images: 1",
+    "output: {        \"resolution\": \"1024x512\",        \"num_images\": 1,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":40,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"65%\",\"bottom\":\"10%\",\"width\":\"52%\",\"height\":\"52%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1024x512\n- num_images: 3",
+    "output: {        \"resolution\": \"1024x512\",        \"num_images\": 3,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":40,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"68.42%\",\"bottom\":\"15.46%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"76.42%\",\"bottom\":\"16.39%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1024x480\n- num_images: 3",
+    "output: {        \"resolution\": \"1024x480\",        \"num_images\": 3,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":28,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":36,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"68.42%\",\"bottom\":\"15.46%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"76.42%\",\"bottom\":\"16.39%\",\"width\":\"30%\",\"height\":\"30%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1360x800\n- num_images: 8",
+    "output: {        \"resolution\": \"1360x800\",        \"num_images\": 8,        \"objects\": [            {\"type\":\"text\",\"left\":\"19.25%\",\"bottom\":\"81.76%\",\"width\":\"65.31%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},            {\"type\":\"text\",\"left\":\"21.25%\",\"bottom\":\"71.73%\",\"width\":\"59.44%\",\"height\":\"100%\",\"fontSize\":64,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"12.63%\",\"bottom\":\"4.16%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"22.63%\",\"bottom\":\"4.16%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"31.88%\",\"bottom\":\"4.61%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"42.63%\",\"bottom\":\"4.16%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"52.63%\",\"bottom\":\"4.61%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"62.00%\",\"bottom\":\"4.00%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"71.38%\",\"bottom\":\"4.61%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"80.63%\",\"bottom\":\"4.16%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1920x600\n- num_images: 5",
+    "output: {        \"resolution\": \"1920x600\",        \"num_images\": 5,        \"objects\": [            {\"type\":\"text\",\"left\":\"33.49%\",\"bottom\":\"83.35%\",\"width\":\"58.46%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},            {\"type\":\"text\",\"left\":\"35.13%\",\"bottom\":\"73.31%\",\"width\":\"53.78%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"30.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"36.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"42.69%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"48.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"54.44%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1200x600\n- num_images: 1",
+    "output: {        \"resolution\": \"1200x600\",        \"num_images\": 1,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":36,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Gill Sans MT\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"65%\",\"bottom\":\"10%\",\"width\":\"50%\",\"height\":\"50%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1200x600\n- num_images: 5",
+    "output: {        \"resolution\": \"1200x600\",        \"num_images\": 5,        \"objects\": [            {\"type\":\"text\",\"left\":\"26.49%\",\"bottom\":\"83.35%\",\"width\":\"58.46%\",\"height\":\"100%\",\"fontSize\":30,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Segoe Print\"},            {\"type\":\"text\",\"left\":\"31.13%\",\"bottom\":\"73.31%\",\"width\":\"53.78%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"25.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"31.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"37.69%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"43.69%\",\"bottom\":\"7.00%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"49.44%\",\"bottom\":\"7.45%\",\"width\":\"35%\",\"height\":\"35%\",\"src\":\"\"}        ]    }",
+    "input: - resolution: 1200x600\n- num_images: 2",
+    "output: {        \"resolution\": \"1200x600\",        \"num_images\": 2,        \"objects\": [            {\"type\":\"text\",\"left\":\"7.86%\",\"bottom\":\"49.62%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":36,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Monotype Corsiva\"},            {\"type\":\"text\",\"left\":\"7.44%\",\"bottom\":\"36.78%\",\"width\":\"48%\",\"height\":\"100%\",\"fontSize\":48,\"fill\":\"\",\"fontWeight\":\"bold\",\"fontStyle\":\"normal\",\"textAlign\":\"left\",\"text\":\"\",\"fontFamily\":\"Arial Black\"},            {\"type\":\"image\",\"left\":\"60.42%\",\"bottom\":\"15.57%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"},            {\"type\":\"image\",\"left\":\"68.42%\",\"bottom\":\"15.46%\",\"width\":\"40%\",\"height\":\"40%\",\"src\":\"\"}        ]    }",
+    f"input: - resolution: {resolution}\n- num_images: {num_images}",
+    "output: ",
+    ])
+    print("generated Template:", parse_gemini_response(response.text))
+    return parse_gemini_response(response.text);
+
 def select_template(resolution, num_images):
     """
     Selects the appropriate template based on resolution and number of images.
@@ -238,21 +384,10 @@ def select_template(resolution, num_images):
     if filtered_templates:
         return random.choice(filtered_templates)
     else:
-        # Fallback: match resolution regardless of image count
-        for template in TEMPLATES:
-            if template['resolution'] == resolution:
-                filtered_templates.append(template)
-    # if filtered templates are not empty, return a random template from filtered templates
-    if filtered_templates:
-        return random.choice(filtered_templates)
-    else:
-        # Fallback: return a default template
-        return random.choice(TEMPLATES)
+        return generate_template_with_gemini(resolution, num_images)
     
 
 def generate_banner(promotion, theme, resolution, color_palette, image_data_list):
-    # modify this such that the PIL is used to convert the background image path to file which could be passed 
-    # to the gemini api for figuring out text colors based on background image.
     try:
         num_images = len(image_data_list)
         # print("Number of images: ", num_images)
@@ -416,11 +551,8 @@ def create_banner():
 
 @app.route('/')
 def index():
-    return render_template('index1.html')
+    return render_template('index.html')
 
-@app.route('/advanced-editor')
-def advanced_editor():
-    return render_template('advanced-editor.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

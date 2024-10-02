@@ -1,0 +1,36 @@
+## How this works:
+This Flask app dynamically generates image banners based on user-provided themes, color palettes, and target resolutions. It leverages a large language model (LLM), specifically Gemini, and potentially an image generation model (possibly Flux).  Here's a detailed breakdown of its system design:
+
+1. **Template Management:**
+    - The app uses a predefined set of `TEMPLATES` (a list of dictionaries). Each template specifies object placements (text and images) for different resolutions and image counts.  These act as layout blueprints.
+    - The `select_template` function retrieves a matching template based on the requested resolution and number of images. If no exact match is found, it likely defaults to a template or generates one.
+    - The `round_percentages` function helps refine the selected template by rounding percentage-based dimensions to the nearest integer.
+
+2. **LLM-powered Template Generation:**
+    - If a suitable template isn't found, `generate_template_with_gemini` dynamically creates one using the Gemini LLM.
+    - It uses few-shot prompting, providing examples of input (resolution, image count) and desired JSON output (template structure).
+    - The LLM generates a JSON template, which is then parsed using `parse_gemini_response`. This function likely handles JSON formatting and error handling.
+
+3. **Background Image Generation:**
+    - The `generate_background` function handles background creation.
+    - It takes the theme, color palette, canvas width, and height as input.
+    - It constructs a prompt for the image generation model (likely Flux, though commented out in the provided code). The prompt includes the theme and colors.
+    - The image generation model is called (e.g., `flux_client.predict`) with the prompt and other parameters (seed, dimensions, inference steps).
+    - The generated background image is returned.
+
+4. **Image Encoding:**
+    - The `image_to_base64` function converts the generated background image into a base64 encoded string. This is a common practice for embedding images directly into HTML or JSON responses.
+
+5. **Flask App (Implied):**
+    - Although not explicitly shown, the code suggests a Flask app structure.  There would be route handlers to accept user input (theme, colors, resolution, image count).
+    - These handlers would orchestrate the template selection/generation, background generation, and final image composition.
+    - The app would then send the composed image (or image data) back to the user.
+
+6. **External Dependencies:**
+    - The app relies on external libraries and services:
+        - `genai`: For interacting with the Gemini LLM.
+        - `flux_client` (commented out):  For image generation using Flux.
+        - `base64`: For encoding images.
+
+
+This design allows for flexible banner creation, adapting to various resolutions and image counts. The use of an LLM for template generation adds a layer of automation and adaptability, reducing the need for manually defined templates.  The image generation component (Flux or similar) provides the visual content based on user-provided themes and colors.
