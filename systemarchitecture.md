@@ -22,9 +22,13 @@ This Flask app dynamically generates image banners based on user-provided themes
 
     - Finally, the generated background image is returned to be used within the banner creation process. The flexibility in input allows the background to match the overall theme, color scheme, and dimensions of the final banner.
 
-4. **Image Encoding:**
-    - The `image_to_base64` function converts the generated background image into a base64 encoded string. This is a common practice for embedding images directly into HTML or JSON responses.
 
+4. **Gemini API Integration:**
+    - The `generate_banner` function utilizes the Gemini API to generate textual and color information for the banner design.
+    - It constructs a prompt that includes the generated template from step 2, the promotion details, theme, resolution, the base64 encoded background image from step 3, and the base64 encoded product images from the input.
+    - The Gemini API response, which is expected to be in JSON format, contains descriptions for the background image, a list of hex color values present in the background image, a comma-separated list of product names, the main promotional text, optional secondary text, and hex color values for both main and secondary text.
+    - Robust error handling (e.g., `try-except` blocks) is implemented to manage potential issues with the API response or JSON parsing.  The function likely checks for valid JSON structure and handles cases where the API call fails or returns unexpected data.
+    - The extracted textual and color information from the Gemini API response is then used to finalize the banner design, integrating it with the background and product images.  This likely involves using image manipulation libraries (like Pillow) to overlay text onto the image.
 5. **Flask App (Implied):**
     - Although not explicitly shown, the code suggests a Flask app structure.  There would be route handlers to accept user input (theme, colors, resolution, image count).
     - These handlers would orchestrate the template selection/generation, background generation, and final image composition.
