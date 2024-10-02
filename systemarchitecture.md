@@ -2,8 +2,8 @@
 This Flask app dynamically generates image banners based on user-provided themes, color palettes, and target resolutions. It leverages the Gemini large language model (LLM) for text-based tasks and utilizes the Flux model for image generation. Here's a detailed breakdown of its system design:
 
 1. **Template Management:**
-    - The app uses a predefined set of `TEMPLATES` (a list of dictionaries). Each template specifies object placements (text and images) for different resolutions and image counts.  These act as layout blueprints.
-    - The `select_template` function retrieves a matching template based on the requested resolution and number of images. If no exact match is found, it likely defaults to a template or generates one.
+    - The app maintains a predefined set of TEMPLATES (stored as a list of dictionaries), where each dictionary represents a template layout for banners. These templates define object placements, including text and images, for a variety of target resolutions and image counts. Each template acts as a blueprint that ensures consistency in design while offering flexibility for different layout needs.
+    - The **select_template** function is responsible for selecting the most appropriate template based on the user's requested resolution and the number of images to be displayed. It searches for an exact match but may fallback to a closest match or dynamically generate one if no perfect template is available, ensuring adaptability.
     - The `round_percentages` function helps refine the selected template by rounding percentage-based dimensions to the nearest integer.
 
 2. **LLM-powered Template Generation:**
